@@ -26,7 +26,7 @@ def get_neighbors(board, x, y):
 
 # returns cell map with dimension dim with n mines
 def get_cell_map(dim, prob_list):
-	false_negative = { #
+	false_negative = {
 		0: 0.1,
 		1: 0.3,
 		2: 0.7,
@@ -35,9 +35,9 @@ def get_cell_map(dim, prob_list):
 	cell_map = [[Cell() for i in range(dim)] for j in range(dim)]
 	cumulative_prob_list = []
 	# compute cumulative probability list
-	cumulative_prob_list.append(prob_list[0]) #
+	cumulative_prob_list.append(prob_list[0])
 	for i in range(len(prob_list)-1):
-		cumulative_prob_list.append(cumulative_prob_list[i] + prob_list[i+1]) #
+		cumulative_prob_list.append(cumulative_prob_list[i] + prob_list[i+1])
 						
 	# assign terrain type to each cell in the map
 	for row in range(dim):
@@ -46,9 +46,9 @@ def get_cell_map(dim, prob_list):
 			for terrain_type, prob in enumerate(cumulative_prob_list):
 				if random_num<prob:
 					cell_map[row][col].type = terrain_type
-					cell_map[row][col].false_negative = false_negative[cell_map[row][col].type] #
-					break #
-	target_location = random.randint(0, dim*dim-1) #
+					cell_map[row][col].false_negative = false_negative[cell_map[row][col].type]
+					break
+	target_location = random.randint(0, dim*dim-1)
 	cell_map[target_location/dim][target_location%dim].is_target = True
 
 	return cell_map
