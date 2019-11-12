@@ -43,7 +43,7 @@ def get_not_found_prob(cell_map, cell_cords):
     return (1-cell.initial_probability) + cell.initial_probability*cell.false_negative
 
 
-def update_belief(cell_map, new_cell, rule_no, utility_no):
+def update_belief_old(cell_map, new_cell, rule_no, utility_no):
     explored_cell = cell_map[new_cell[0]][new_cell[1]]
     min_cost = sys.maxint
     dim = len(cell_map)
@@ -85,6 +85,54 @@ def update_belief(cell_map, new_cell, rule_no, utility_no):
 
     return min_cost_pool
 
+
+def update_belief(cell_map, new_cell, rule_no, utility_no):
+    explored_cell = cell_map[new_cell[0]][new_cell[1]]
+    min_cost = sys.maxint
+    dim = len(cell_map)
+
+    denominator = 0
+    for row in range(0, dim):
+        for col in range(0, dim):
+            cell = cell_map[row][col]
+            if row == new_cell[0] and col == new_cell[1]:
+                denominator += cell.p_target * cell.false_negative
+            else:
+                denominator += cell.p_target
+
+    for row in range(0, dim):
+        for col in range(0, dim):
+            cell = cell_map[row][col]
+            if row == new_cell[0] and col == new_cell[1]:
+                updated_belief = float(cell.p_target * cell.false_negative) / denominator
+                cell.p_target = updated_belief
+            else:
+                updated_belief = float(cell.p_target) / denominator
+                cell.p_target = updated_belief
+
+    for row in range(0, dim):
+        for col in range(0, dim):
+            cell = cell_map[row][col]
+            cell.cost = get_cost(cell_map, (row, col), (new_cell[0], new_cell[1]), rule_no)
+
+    for row in range(0, dim):
+        for col in range(0, dim):
+            cell = cell_map[row][col]
+            if utility_no == 0:
+                cell.utility = get_utility(cell_map, (row, col), rule_no)
+            else:
+                cell.utility = get_utility_total(cell_map, (row, col), rule_no)
+            if cell.utility < min_cost:
+                min_cost = cell.utility
+
+    min_cost_pool = []
+    for row in range(0, dim):
+        for col in range(0, dim):
+            cell = cell_map[row][col]
+            if min_cost == cell.utility:
+                min_cost_pool.append((row, col))
+
+    return min_cost_pool
 
 def query_cell(cell_map, cell_location):
     cell = cell_map[cell_location[0]][cell_location[1]]

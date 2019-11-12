@@ -150,7 +150,7 @@ def search_cell_map(cell_map, observations_t, rule_no):
         target_found = query_cell(cell_map, random_cell)
         if target_found:
             return search_steps, observations_t, time.time() - start_time
-        max_belief_pool = update_belief_old(cell_map, random_cell, rule_no)
+        max_belief_pool = update_belief(cell_map, random_cell, rule_no)
         # cm.visualize_probability(cell_map)
 
 
@@ -161,11 +161,12 @@ observations_t = []
 
 # cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
 cell_map = cm.get_cell_map(dim, prob_list)
-# (target_cord_x, target_cord_y) = cm.add_target(cell_map)
-# print "Target location:", target_cord_x, target_cord_y
-# print "Target terrain type:", terrain_type
+target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
+print "Target location:", target_cord_x, target_cord_y
+print "Target terrain type:", terrain_type
 
 # gb.visualize_board(cell_map)
 start_time = time.time()
-search_cell_map(cell_map, observations_t, 0)
-# print time.time() - start_time
+search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, 0)
+print search_steps
+

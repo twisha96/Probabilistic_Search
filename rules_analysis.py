@@ -34,8 +34,10 @@ for j in range(dim):
             print "Rule 2- steps: ", search_steps_2, ", exec time: ", exec_time_2
             search_steps_3, observations_t_3, exec_time_3 = sd.search_cell_map(copy.deepcopy(cell_map), [], 2)
             print "Rule 3- steps: ", search_steps_3, ", exec time: ", exec_time_3
+
             df_entry = pd.DataFrame([(search_steps_1, search_steps_2, search_steps_3, exec_time_1,  exec_time_2,
                                       exec_time_3)], columns=column_name_list, index=[terrain_type])
+
             # print "df entry", df_entry
             analysis_df = analysis_df.append(df_entry)
             # y_rule1.append(search_steps_1)
