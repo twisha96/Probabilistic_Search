@@ -15,7 +15,7 @@ dim = 3
 column_name_list = ['search steps 1', 'exec time 1', 'search steps 2', 'exec time 2', 'search steps 3', 'exec time 3']
 prob_list = [0.2, 0.3, 0.3, 0.2]
 analysis_df = pd.DataFrame(columns=column_name_list)
-iterations = 10
+iterations = 100
 terrain_type_list = [0, 1, 2, 3]
 # for terrain_type in terrain_type_list:
 cell_map = cm.get_cell_map(dim, prob_list)
@@ -24,7 +24,7 @@ for j in range(dim):
         cell_map[j][k].is_target = True
         # x, y, type = cm.add_target(cell_map)
         print "x", j, "y", k, "type", cell_map[j][k].type
-        cm.visualize_board(cell_map)
+        # cm.visualize_board(cell_map)
         for i in range(iterations):
             print "iteration", i
             search_steps_1, observations_t_1, exec_time_1 = sd.search_cell_map(copy.deepcopy(cell_map), [], 0)
@@ -33,7 +33,7 @@ for j in range(dim):
             print "Rule 2- steps: ", search_steps_2, ", exec time: ", exec_time_2
             search_steps_3, observations_t_3, exec_time_3 = sd.search_cell_map(copy.deepcopy(cell_map), [], 2)
             print "Rule 3- steps: ", search_steps_3, ", exec time: ", exec_time_3
-            cm.remove_target(cell_map, j, k)
+
             df_entry = pd.DataFrame([(search_steps_1, exec_time_1, search_steps_2, exec_time_2, search_steps_3, exec_time_3)],
                                     columns=column_name_list, index=[type])
             # print "df entry", df_entry
@@ -41,6 +41,7 @@ for j in range(dim):
             # y_rule1.append(search_steps_1)
             # y_rule2.append(search_steps_2)
             analysis_df.to_csv("analysis.csv")
+        cm.remove_target(cell_map, j, k)
 #
 # ax.plot(density_array, y_baseline)
 # ax.plot(density_array, y_inference)
