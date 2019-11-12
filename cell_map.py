@@ -62,7 +62,7 @@ def get_cell_map(dim, prob_list):
             for terrain_type, prob in enumerate(cumulative_prob_list):
                 if random_num < prob:
                     cell.type = terrain_type
-                    print "Cell type: ", cell.type
+                    # print "Cell type: ", cell.type
                     cell.false_negative = false_negative[cell.type]
                     break
 
@@ -117,6 +117,18 @@ def visualize_probability(cell_map):
             basic_map[i].append(cell_map[i][j].p_target)
     ax = sns.heatmap(basic_map, cmap="Blues", cbar=False, linewidths=.1, linecolor="Black", annot=True)
     plt.show()
+
+
+def probability_sanity_check(cell_map):
+    prob = []
+    sum = 0.0
+    dim = len(cell_map)
+    for i in range(dim):
+        for j in range(dim):
+            curr_prob = cell_map[i][j].p_target
+            prob.append(curr_prob)
+            sum += curr_prob
+    return prob, sum
 
 
 def visualize_board(cell_map):
