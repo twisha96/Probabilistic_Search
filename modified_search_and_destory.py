@@ -112,7 +112,7 @@ for i in range(0, dim):
         max_belief_pool.append((i, j))
 
 cell_map = gb.get_cell_map(dim, prob_list)
-(target_cord_x, target_cord_y) = gb.add_target(cell_map)
+(target_cord_x, target_cord_y, cell_type) = gb.add_target(cell_map)
 print "Target location:", target_cord_x, target_cord_y
 print "Target terrain type:", cell_map[target_cord_x][target_cord_y].type
 gb.visualize_board(cell_map)

@@ -156,18 +156,18 @@ def search_cell_map(cell_map, observations_t, rule_no):
 
 
 # Test code
-# prob_list = [0.2, 0.3, 0.3, 0.2]
-# dim = 3
-# observations_t = []
-#
-# # cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
-# cell_map = cm.get_cell_map(dim, prob_list)
-# target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
-# print "Target location:", target_cord_x, target_cord_y
-# print "Target terrain type:", terrain_type
-#
-# # gb.visualize_board(cell_map)
-# start_time = time.time()
-# search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, 0)
-# print search_steps
+prob_list = [0.2, 0.3, 0.3, 0.2]
+dim = 3
+observations_t = []
+
+# cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
+cell_map = cm.get_cell_map(dim, prob_list)
+target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
+print "Target location:", target_cord_x, target_cord_y
+print "Target terrain type:", terrain_type
+
+# gb.visualize_board(cell_map)
+start_time = time.time()
+search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, 0)
+print search_steps
 
