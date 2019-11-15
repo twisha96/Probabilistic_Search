@@ -55,14 +55,13 @@ def get_cell_map(dim, prob_list):
     for row in range(dim):
         for col in range(dim):
             cell = cell_map[row][col]
-            cell.p_target = 1.0 / (dim * dim)
+            cell.belief = 1.0 / (dim * dim)
             cell.initial_probability = 1.0 / (dim * dim)
             # generate random number to assign terrain type to the cell
             random_num = random.uniform(0, 1)
             for terrain_type, prob in enumerate(cumulative_prob_list):
                 if random_num < prob:
                     cell.type = terrain_type
-                    # print "Cell type: ", cell.type
                     cell.false_negative = false_negative[cell.type]
                     break
 
@@ -70,6 +69,7 @@ def get_cell_map(dim, prob_list):
     # target_location_y = random.randint(0, dim - 1)
     # cell_map[target_location_x][target_location_y].is_target = True
     return cell_map#, target_location_x, target_location_y, cell_map[target_location_x][target_location_y].type
+
 
 def get_specific_cell_map(dim, prob_list, terrain_type_value):
     # initialize the false negative probability based on the terrain type
@@ -90,7 +90,7 @@ def get_specific_cell_map(dim, prob_list, terrain_type_value):
     for row in range(dim):
         for col in range(dim):
             cell = cell_map[row][col]
-            cell.p_target = 1.0 / (dim * dim)
+            cell.belief = 1.0 / (dim * dim)
             cell.initial_probability = 1.0 / (dim * dim)
             # generate random number to assign terrain type to the cell
             random_num = random.uniform(0, 1)
@@ -114,21 +114,9 @@ def visualize_probability(cell_map):
     for i in range(dim):
         basic_map.append([])
         for j in range(dim):
-            basic_map[i].append(cell_map[i][j].p_target)
+            basic_map[i].append(cell_map[i][j].belief)
     ax = sns.heatmap(basic_map, cmap="Blues", cbar=False, linewidths=.1, linecolor="Black", annot=True)
     plt.show()
-
-
-def probability_sanity_check(cell_map):
-    prob = []
-    sum = 0.0
-    dim = len(cell_map)
-    for i in range(dim):
-        for j in range(dim):
-            curr_prob = cell_map[i][j].p_target
-            prob.append(curr_prob)
-            sum += curr_prob
-    return prob, sum
 
 
 def visualize_board(cell_map):
@@ -170,3 +158,4 @@ def draw_board(basic_map, i, j):
 # dim = 10
 # cell_map = get_cell_map(dim, prob_list)
 # visualize_board(cell_map)
+
