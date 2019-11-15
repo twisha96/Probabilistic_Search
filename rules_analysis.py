@@ -7,7 +7,7 @@ import pandas as pd
 
 import search_and_destroy as sd
 
-dim = 50
+dim = 3
 # fig, ax = plt.subplots()
 # y_rule1 = []
 # y_rule2 = []

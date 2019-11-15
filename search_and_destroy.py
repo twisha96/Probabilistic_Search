@@ -141,12 +141,12 @@ def search_cell_map(cell_map, observations_t, rule_no):
                         break
         else:
             n = len(max_belief_pool)
-            # random_cell_index = 0
-            # if n > 1:
-            #     random_cell_index = random.randint(0, n-1)
-            # random_cell = max_belief_pool[random_cell_index]
-            random_cell = max_belief_pool[0]
-        observations_t.append((random_cell, cell_map[random_cell[0]][random_cell[1]].belief,
+            random_cell_index = 0
+            if n > 1:
+                random_cell_index = random.randint(0, n-1)
+            random_cell = max_belief_pool[random_cell_index]
+            # random_cell = max_belief_pool[0]
+        observations_t.append((random_cell, cell_map[random_cell[0]][random_cell[1]].p_target,
                                cell_map[random_cell[0]][random_cell[1]].type))
         target_found = query_cell(cell_map, random_cell)
         if target_found:
@@ -156,18 +156,18 @@ def search_cell_map(cell_map, observations_t, rule_no):
 
 
 # Test code
-prob_list = [0.2, 0.3, 0.3, 0.2]
-dim = 3
-observations_t = []
-
-# cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
-cell_map = cm.get_cell_map(dim, prob_list)
-target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
-print "Target location:", target_cord_x, target_cord_y
-print "Target terrain type:", terrain_type
-
-# gb.visualize_board(cell_map)
-start_time = time.time()
-search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, 0)
-print search_steps
+# prob_list = [0.2, 0.3, 0.3, 0.2]
+# dim = 3
+# observations_t = []
+#
+# # cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
+# cell_map = cm.get_cell_map(dim, prob_list)
+# target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
+# print "Target location:", target_cord_x, target_cord_y
+# print "Target terrain type:", terrain_type
+#
+# cm.visualize_board(cell_map)
+# start_time = time.time()
+# search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, 0)
+# print search_steps
 
