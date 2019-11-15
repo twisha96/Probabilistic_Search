@@ -6,10 +6,11 @@ import time
 
 def get_total_cost_helper(cell_map, source_cell_cords, rule_no):
     total_cost = 0
+    dim = len(cell_map)
     for row in range(0, dim):
         for col in range(0, dim):
             total_cost += get_cost(cell_map, (row, col), source_cell_cords, rule_no)
-    return float(total_cost)/(dim*dim)
+    return float(total_cost) / (dim * dim)
 
 
 def get_total_cost(cell_map, source_cell_cords, rule_no):
@@ -20,19 +21,19 @@ def get_total_cost(cell_map, source_cell_cords, rule_no):
 
 def get_rule_1_cost(cell_map, destination_cell_cords):
     cell = cell_map[destination_cell_cords[0]][destination_cell_cords[1]]
-    return 1/cell.belief
+    return 1 / cell.belief
 
 
 def get_rule_2_cost(cell_map, destination_cell_cords):
     cell = cell_map[destination_cell_cords[0]][destination_cell_cords[1]]
-    return 1.0/(cell.belief*(1 - cell.false_negative))
+    return 1.0 / (cell.belief * (1 - cell.false_negative))
 
 
 def get_cost(cell_map, destination_cell_cords, source_cell_cords, rule_no):
     destination_cell = cell_map[destination_cell_cords[0]][destination_cell_cords[1]]
     if rule_no == 0:
         destination_cost = 1.0 / destination_cell.belief + (abs(destination_cell_cords[0] - source_cell_cords[0]) +
-                                                              abs(destination_cell_cords[1] - source_cell_cords[1]))
+                                                            abs(destination_cell_cords[1] - source_cell_cords[1]))
     else:
         destination_cost = 1.0 / (destination_cell.belief * (1 - destination_cell.false_negative)) + \
                            (abs(destination_cell_cords[0] - source_cell_cords[0]) +
@@ -40,26 +41,31 @@ def get_cost(cell_map, destination_cell_cords, source_cell_cords, rule_no):
     return destination_cost
 
 
-def get_not_found_prob(cell_cords):
+def get_not_found_prob(cell_map, cell_cords):
     cell = cell_map[cell_cords[0]][cell_cords[1]]
-    return (1-cell.initial_probability) + cell.initial_probability*cell.false_negative
-
+    return (1 - cell.initial_probability) + cell.initial_probability * cell.false_negative
 
 
 def update_belief_old(cell_map, new_cell, rule_no, cost_function):
     explored_cell = cell_map[new_cell[0]][new_cell[1]]
     min_cost = sys.maxint
+    dim = len(cell_map)
+
     for row in range(0, dim):
         for col in range(0, dim):
             cell = cell_map[row][col]
             if row == new_cell[0] and col == new_cell[1]:
-                updated_belief = (float)(explored_cell.belief*explored_cell.false_negative)/(float)(explored_cell.belief*explored_cell.false_negative + 1 - explored_cell.belief)
+                updated_belief = \
+                    float(explored_cell.belief * explored_cell.false_negative) / \
+                    float(explored_cell.belief * explored_cell.false_negative + 1 - explored_cell.belief)
                 explored_cell.belief = updated_belief
 
             else:
-                explored_cell_not_found_prob = get_not_found_prob(new_cell) # not fj
-                conditional_not_found_prob = (float)(explored_cell_not_found_prob - cell.initial_probability)/(float)(1-cell.initial_probability)
-                updated_belief = cell.belief/(cell.belief+(1-cell.belief)*conditional_not_found_prob)
+                explored_cell_not_found_prob = get_not_found_prob(new_cell)  # not fj
+                conditional_not_found_prob = \
+                    float(explored_cell_not_found_prob - cell.initial_probability) / \
+                    float(1 - cell.initial_probability)
+                updated_belief = cell.belief / (cell.belief + (1 - cell.belief) * conditional_not_found_prob)
                 cell.belief = updated_belief
 
     for row in range(0, dim):
@@ -98,19 +104,19 @@ def update_belief(cell_map, new_cell, rule_no, cost_function):
         for col in range(0, dim):
             cell = cell_map[row][col]
             if row == new_cell[0] and col == new_cell[1]:
-                denominator += cell.p_target * cell.false_negative
+                denominator += cell.belief * cell.false_negative
             else:
-                denominator += cell.p_target
+                denominator += cell.belief
 
     for row in range(0, dim):
         for col in range(0, dim):
             cell = cell_map[row][col]
             if row == new_cell[0] and col == new_cell[1]:
-                updated_belief = float(cell.p_target * cell.false_negative) / denominator
-                cell.p_target = updated_belief
+                updated_belief = float(cell.belief * cell.false_negative) / denominator
+                cell.belief = updated_belief
             else:
-                updated_belief = float(cell.p_target) / denominator
-                cell.p_target = updated_belief
+                updated_belief = float(cell.belief) / denominator
+                cell.belief = updated_belief
 
     for row in range(0, dim):
         for col in range(0, dim):
@@ -122,8 +128,13 @@ def update_belief(cell_map, new_cell, rule_no, cost_function):
             cell = cell_map[row][col]
             if cost_function == 0:
                 cell.utility = cell.cost
+            elif cost_function == 1:
+                cell.utility = get_rule_1_cost(cell_map, (row, col))
+            elif cost_function == 2:
+                cell.utility = get_rule_2_cost(cell_map, (row, col))
             else:
                 cell.utility = get_total_cost(cell_map, (row, col), rule_no)
+
             if cell.utility < min_cost:
                 min_cost = cell.utility
 
@@ -163,43 +174,43 @@ def search_cell_map(cell_map, observations_t, rule_no, cost_function):
         n = len(max_belief_pool)
         random_cell_index = 0
         if n > 1:
-            random_cell_index = random.randint(0, n-1)
+            random_cell_index = random.randint(0, n - 1)
         random_cell = max_belief_pool[random_cell_index]
 
         if search_steps == 1:
             prev_random_cell = random_cell
 
         # print "before search_steps", search_steps
-        search_steps += abs(random_cell[0] - prev_random_cell[0]) + abs(random_cell[1] - prev_random_cell[1])
+        search_steps += abs(random_cell[0] - prev_random_cell[0]) + \
+                        abs(random_cell[1] - prev_random_cell[1])
         # print "distance cost", abs(random_cell[0] - prev_random_cell[0]) + abs(random_cell[1] - prev_random_cell[1])
         # print "after search_steps", search_steps
 
         prev_random_cell = random_cell
-        observations_t.append((random_cell, cell_map[random_cell[0]][random_cell[1]].p_target))
+        observations_t.append((random_cell, cell_map[random_cell[0]][random_cell[1]].belief))
         target_found = query_cell(cell_map, random_cell)
         if target_found:
-            return search_steps, observations_t, time.time()-start_time
+            return search_steps, observations_t, time.time() - start_time
         max_belief_pool = update_belief(cell_map, random_cell, rule_no, cost_function)
         # cm.visualize_probability(cell_map)
 
-
 # Test code
-prob_list = [0.2, 0.3, 0.3, 0.2]
-dim = 4
-observations_t = []
-
-max_belief_pool = []
-for i in range(0, dim):
-    for j in range(0, dim):
-        max_belief_pool.append((i, j))
-
-cell_map = cm.get_cell_map(dim, prob_list)
-(target_cord_x, target_cord_y, cell_type) = cm.add_target(cell_map)
-print "Target location:", target_cord_x, target_cord_y
-print "Target terrain type:", cell_map[target_cord_x][target_cord_y].type
-cm.visualize_board(cell_map)
-
-start_time = time.time()
-print search_cell_map(cell_map, observations_t, max_belief_pool, 1)
-print "Observations: ", observations_t
-print time.time() - start_time
+# prob_list = [0.2, 0.3, 0.3, 0.2]
+# dim = 4
+# observations_t = []
+#
+# max_belief_pool = []
+# for i in range(0, dim):
+#     for j in range(0, dim):
+#         max_belief_pool.append((i, j))
+#
+# cell_map = cm.get_cell_map(dim, prob_list)
+# (target_cord_x, target_cord_y, cell_type) = cm.add_target(cell_map)
+# print "Target location:", target_cord_x, target_cord_y
+# print "Target terrain type:", cell_map[target_cord_x][target_cord_y].type
+# cm.visualize_board(cell_map)
+#
+# start_time = time.time()
+# print search_cell_map(cell_map, observations_t, max_belief_pool, 1)
+# print "Observations: ", observations_t
+# print time.time() - start_time

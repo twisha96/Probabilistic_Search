@@ -146,7 +146,7 @@ def search_cell_map(cell_map, observations_t, rule_no):
                 random_cell_index = random.randint(0, n-1)
             random_cell = max_belief_pool[random_cell_index]
             # random_cell = max_belief_pool[0]
-        observations_t.append((random_cell, cell_map[random_cell[0]][random_cell[1]].p_target,
+        observations_t.append((random_cell, cell_map[random_cell[0]][random_cell[1]].belief,
                                cell_map[random_cell[0]][random_cell[1]].type))
         target_found = query_cell(cell_map, random_cell)
         if target_found:
