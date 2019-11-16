@@ -5,9 +5,10 @@ import time
 
 def get_not_found_prob(cell_map, cell_cords):
     cell = cell_map[cell_cords[0]][cell_cords[1]]
-    return (1-cell.initial_probability) + cell.initial_probability*cell.false_negative
+    return (1-cell.initial_probability) + cell.initial_probability * cell.false_negative
 
-def update_belief_using_neighbors(cell_map, rule_no):
+
+def update_belief_using_neighbors(cell_map):
     dim = len(cell_map)
     
     for row in range(dim):
@@ -28,9 +29,10 @@ def get_p_tracker_out_given_in_cell(cell_terrain, tracker_output):
 
 def get_p_tracker_out_given_not_in_cell(cell_map, cell_terrain, terrain_count, tracker_output):
     dim = len(cell_map)
+    total_cells = dim * dim
     if cell_terrain == tracker_output:
-        return 1.0/ (dim*dim - terrain_count[tracker_output])
-    return 1.0/ (dim*dim - terrain_count[tracker_output] - 1)
+        return 1.0/3 * (total_cells - terrain_count[tracker_output]) / (total_cells - 1)
+    return 1.0/3 * (total_cells - terrain_count[tracker_output] - 1) / (total_cells - 1)
 
 
 def update_belief_using_tracker(cell_map, terrain_count, tracker_output, rule_no):
@@ -136,7 +138,6 @@ def search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, rule
             terrain_type = cell_map[i][j].type
             terrain_count[terrain_type] += 1
 
-
     while True:
         tracker_output = cm.get_terrain(cell_map, (target_cord_x, target_cord_y))
         # Step C - Update belief based on terrain information from tracker
@@ -178,9 +179,7 @@ def search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, rule
         target_cord_x, target_cord_y = cm.move_target(cell_map, (target_cord_x, target_cord_y))
         
         # Step B - After moving target, compute P(in i @ t+1) using P(in neighbor of i @ t)
-        update_belief_using_neighbors(cell_map, rule_no)
-
-        
+        update_belief_using_neighbors(cell_map)
         # cm.visualize_probability(cell_map)
 
 

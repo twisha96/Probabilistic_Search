@@ -64,9 +64,13 @@ def get_p_tracker_out_given_in_cell(cell_terrain, tracker_output):
 
 def get_p_tracker_out_given_not_in_cell(cell_map, cell_terrain, terrain_count, tracker_output):
     dim = len(cell_map)
+    # if cell_terrain == tracker_output:
+    #     return 1.0/ (dim*dim - terrain_count[tracker_output])
+    # return 1.0/ (dim*dim - terrain_count[tracker_output] - 1)
+    total_cells = dim * dim
     if cell_terrain == tracker_output:
-        return 1.0/ (dim*dim - terrain_count[tracker_output])
-    return 1.0/ (dim*dim - terrain_count[tracker_output] - 1)
+        return 1.0/3 * (total_cells - terrain_count[tracker_output]) / (total_cells - 1)
+    return 1.0/3 * (total_cells - terrain_count[tracker_output] - 1) / (total_cells - 1)
 
 
 def update_belief_using_tracker(cell_map, terrain_count, tracker_output, rule_no, new_cell, cost_function):
@@ -275,7 +279,7 @@ cell_map = cm.get_cell_map(dim, prob_list)
 target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
 print "Target location:", target_cord_x, target_cord_y
 print "Target terrain type:", terrain_type
-cost_function = 0
+cost_function = 1
 # cm.visualize_board(cell_map)
 start_time = time.time()
 search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, 0, cost_function)
