@@ -37,20 +37,20 @@ for i in range(iterations):
 
     search_steps_1, observations_t_1, exec_time_1 = \
         sd.search_cell_map(copy.deepcopy(cell_map), [], 0)
-    print "Rule 1 with travel: ", search_steps_1, ", exec time: ", exec_time_1
+    print "Rule 1", search_steps_1, ", exec time: ", exec_time_1
     search_steps_2, observations_t_2, exec_time_2 = \
         sd.search_cell_map(copy.deepcopy(cell_map), [], 1)
-    print "Rule 2 with travel: ", search_steps_2, ", exec time: ", exec_time_2
+    print "Rule 2", search_steps_2, ", exec time: ", exec_time_2
     search_steps_3, observations_t_3, exec_time_3 = \
         sd.search_cell_map(copy.deepcopy(cell_map), [], 2)
-    print "Rule 2 with travel: ", search_steps_2, ", exec time: ", exec_time_2
+    print "Rule 3", search_steps_3, ", exec time: ", exec_time_3
 
     modified_search_steps_r1, modified_observations_t_r1, modified_exec_time_r1 = \
         msd.search_cell_map(copy.deepcopy(cell_map), [], 0, 1)
-    print "Rule 1 with travel: ", search_steps_1, ", exec time: ", exec_time_1
+    print "Rule 1 with travel: ", modified_search_steps_r1
     modified_search_steps_r2, modified_observations_t_r2, modified_exec_time_r2 = \
         msd.search_cell_map(copy.deepcopy(cell_map), [], 1, 2)
-    print "Rule 2 with travel: ", search_steps_2, ", exec time: ", exec_time_2
+    print "Rule 2 with travel: ", modified_search_steps_r2
 
     modified_search_steps_1, modified_observations_t_1, modified_exec_time_1 = \
         msd.search_cell_map(copy.deepcopy(cell_map), [], 0, 0)
