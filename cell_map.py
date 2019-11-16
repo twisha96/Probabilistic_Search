@@ -10,8 +10,8 @@ import numpy as np
 
 
 # returns a list of 4 neighbors around a given cell
-def get_neighbors(board, x, y):
-    dim = len(board)
+def get_neighbors(cell_map, x, y):
+    dim = len(cell_map)
     neighbor_coordinates = []
     if (y - 1 >= 0):
         neighbor_coordinates.append((x, y - 1))
@@ -25,8 +25,25 @@ def get_neighbors(board, x, y):
     return neighbor_coordinates
 
 
+def move_target(cell_map, old_target_location):
+    x = old_target_location[0]
+    y = old_target_location[1]
+    remove_target(cell_map, x, y)
+    neighbors = get_neighbors(cell_map, x, y)
+    num_neighbors = len(neighbors)
+    neighbor_index = random.randint(0, num_neighbors-1)
+    neighbor_coordinates = neighbors[neighbor_index]
+    add_target_at_location(cell_map, neighbor_coordinates[0], neighbor_coordinates[1])
+    return neighbor_coordinates[0], neighbor_coordinates[1]
+
+
 def remove_target(cell_map, x_cord, y_cord):
     cell_map[x_cord][y_cord].is_target = False
+
+
+def add_target_at_location(cell_map, x_cord, y_cord):
+    cell_map[x_cord][y_cord].is_target = True
+    return x_cord, y_cord, cell_map[x_cord][y_cord].type
 
 
 def add_target(cell_map):
@@ -35,6 +52,15 @@ def add_target(cell_map):
     target_location_y = random.randint(0, dim - 1)
     cell_map[target_location_x][target_location_y].is_target = True
     return target_location_x, target_location_y, cell_map[target_location_x][target_location_y].type
+
+
+def get_terrain(cell_map, target_location):
+    target_terrain = cell_map[target_location[0]][target_location[1]].type
+    terrain_types = [0,1,2,3]
+    terrain_types.pop(target_terrain)
+    
+    terrain_index = random.randint(0,2)
+    return terrain_types[terrain_index]
 
 
 def get_cell_map(dim, prob_list):

@@ -29,3 +29,6 @@ class Cell:
 
       # the summation of the cost of cell and the entire board
       cell.utility = -1
+
+      # cost of cell computed by using it's distance from the explored node and cost of the subsequent traversal upon failure
+      cell.new_cost = -1
