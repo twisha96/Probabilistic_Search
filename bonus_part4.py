@@ -3,12 +3,14 @@ import cell_map as cm
 import time
 import sys
 
+
 def get_total_cost_helper(cell_map, source_cell_cords, rule_no):
     total_cost = 0
     dim = len(cell_map)
     for row in range(0, dim):
         for col in range(0, dim):
-            total_cost += get_cost(cell_map, (row, col), source_cell_cords, rule_no)
+            if cell_map[row][col].belief > 0:
+                total_cost += get_cost(cell_map, (row, col), source_cell_cords, rule_no)
     return float(total_cost) / (dim * dim)
 
 
@@ -39,9 +41,11 @@ def get_cost(cell_map, destination_cell_cords, source_cell_cords, rule_no):
                             abs(destination_cell_cords[1] - source_cell_cords[1]))
     return destination_cost
 
+
 def get_not_found_prob(cell_map, cell_cords):
     cell = cell_map[cell_cords[0]][cell_cords[1]]
     return (1-cell.initial_probability) + cell.initial_probability*cell.false_negative
+
 
 def update_belief_using_neighbors(cell_map, rule_no):
     dim = len(cell_map)
@@ -147,6 +151,7 @@ def update_belief_using_tracker(cell_map, terrain_count, tracker_output, rule_no
 
     '''
 
+
 def update_belief(cell_map, new_cell, rule_no):
     dim = len(cell_map)
     explored_cell = cell_map[new_cell[0]][new_cell[1]]
@@ -181,9 +186,6 @@ def update_belief(cell_map, new_cell, rule_no):
     # prob_map, sum_prob = cm.probability_sanity_check(cell_map)
     # print "prob_map", prob_map
     # print "sum_prob", sum_prob
-
-
-
     # return max_belief_pool
 
 
@@ -210,10 +212,7 @@ def search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, rule
             terrain_type = cell_map[i][j].type
             terrain_count[terrain_type] += 1
 
-
     while True:
-        
-
         search_steps += 1
         flag = False
         if rule_no == 2:
@@ -239,7 +238,6 @@ def search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, rule
                 random_cell_index = random.randint(0, n-1)
             random_cell = max_belief_pool[random_cell_index]
             # random_cell = max_belief_pool[0]
-        
 
         if search_steps == 1:
             prev_random_cell = random_cell
@@ -265,23 +263,21 @@ def search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, rule
         # Step B - After moving target, compute P(in i @ t+1) using P(in neighbor of i @ t)
         update_belief_using_neighbors(cell_map, rule_no)
 
-        
-        # cm.visualize_probability(cell_map)
-
 
 # Test code
-prob_list = [0.2, 0.3, 0.3, 0.2]
-dim = 20
-observations_t = []
-
-# cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
-cell_map = cm.get_cell_map(dim, prob_list)
-target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
-print "Target location:", target_cord_x, target_cord_y
-print "Target terrain type:", terrain_type
-cost_function = 1
-# cm.visualize_board(cell_map)
-start_time = time.time()
-search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, 0, cost_function)
-print search_steps
-
+# prob_list = [0.2, 0.3, 0.3, 0.2]
+# dim = 20
+# observations_t = []
+#
+# # cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
+# cell_map = cm.get_cell_map(dim, prob_list)
+# target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
+# print "Target location:", target_cord_x, target_cord_y
+# print "Target terrain type:", terrain_type
+# cost_function = 1
+# # cm.visualize_board(cell_map)
+# start_time = time.time()
+# search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, 0,
+#                                                           cost_function)
+# print search_steps
+#

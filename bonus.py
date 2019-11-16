@@ -61,7 +61,6 @@ def update_belief_using_tracker(cell_map, terrain_count, tracker_output, rule_no
                 if cell.belief > max_belief:
                     max_belief = cell.belief
 
-
     for row in range(0, dim):
         for col in range(0, dim):
             cell = cell_map[row][col]
@@ -109,9 +108,6 @@ def update_belief(cell_map, new_cell, rule_no):
     # prob_map, sum_prob = cm.probability_sanity_check(cell_map)
     # print "prob_map", prob_map
     # print "sum_prob", sum_prob
-
-
-
     # return max_belief_pool
 
 
@@ -184,18 +180,18 @@ def search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, rule
 
 
 # Test code
-prob_list = [0.2, 0.3, 0.3, 0.2]
-dim = 20
-observations_t = []
-
-# cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
-cell_map = cm.get_cell_map(dim, prob_list)
-target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
-print "Target location:", target_cord_x, target_cord_y
-print "Target terrain type:", terrain_type
-
-# cm.visualize_board(cell_map)
-start_time = time.time()
-search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, 0)
-print search_steps
+# prob_list = [0.2, 0.3, 0.3, 0.2]
+# dim = 20
+# observations_t = []
+#
+# # cell_map, target_cord_x, target_cord_y, terrain_type = cm.get_cell_map(dim, prob_list)
+# cell_map = cm.get_cell_map(dim, prob_list)
+# target_cord_x, target_cord_y, terrain_type = cm.add_target(cell_map)
+# print "Target location:", target_cord_x, target_cord_y
+# print "Target terrain type:", terrain_type
+#
+# # cm.visualize_board(cell_map)
+# start_time = time.time()
+# search_steps, observations_t, exec_time = search_cell_map(cell_map, observations_t, target_cord_x, target_cord_y, 0)
+# print search_steps
 
