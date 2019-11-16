@@ -44,7 +44,7 @@ def get_new_cost(cell_map, destination_cell_cords, source_cell_cords, rule_no):
     total_cost = local_cost + min_future_cost
     return total_cost
 
-def update_belief(cell_map, new_cell, rule_no, cost_function):
+def update_belief(cell_map, new_cell, rule_no):
     explored_cell = cell_map[new_cell[0]][new_cell[1]]
     min_cost = sys.maxint
     dim = len(cell_map)
@@ -89,7 +89,7 @@ def query_cell(cell_map, cell_location):
     return False
 
 
-def search_cell_map(cell_map, observations_t, rule_no, cost_function):
+def search_cell_map(cell_map, observations_t, rule_no):
     search_steps = 0
     start_time = time.time()
     max_belief_pool = []
@@ -127,28 +127,28 @@ def search_cell_map(cell_map, observations_t, rule_no, cost_function):
         target_found = query_cell(cell_map, random_cell)
         if target_found:
             return search_steps, observations_t, time.time() - start_time
-        max_belief_pool = update_belief(cell_map, random_cell, rule_no, cost_function)
+        max_belief_pool = update_belief(cell_map, random_cell, rule_no)
         # cm.visualize_probability(cell_map)
 
 # Test code
-prob_list = [0.2, 0.3, 0.3, 0.2]
-dim = 12
-observations_t = []
+# prob_list = [0.2, 0.3, 0.3, 0.2]
+# dim = 12
+# observations_t = []
 
-max_belief_pool = []
-for i in range(0, dim):
-    for j in range(0, dim):
-        max_belief_pool.append((i, j))
+# max_belief_pool = []
+# for i in range(0, dim):
+#     for j in range(0, dim):
+#         max_belief_pool.append((i, j))
 
-cell_map = cm.get_cell_map(dim, prob_list)
-(target_cord_x, target_cord_y, cell_type) = cm.add_target(cell_map)
-print "Target location:", target_cord_x, target_cord_y
-print "Target terrain type:", cell_map[target_cord_x][target_cord_y].type
-cm.visualize_board(cell_map)
+# cell_map = cm.get_cell_map(dim, prob_list)
+# (target_cord_x, target_cord_y, cell_type) = cm.add_target(cell_map)
+# print "Target location:", target_cord_x, target_cord_y
+# print "Target terrain type:", cell_map[target_cord_x][target_cord_y].type
+# #cm.visualize_board(cell_map)
 
-start_time = time.time()
-search_steps, observations_t, execution_time = search_cell_map(cell_map, observations_t, max_belief_pool, 1)
-print search_steps
-print execution_time
+# start_time = time.time()
+# search_steps, observations_t, execution_time = search_cell_map(cell_map, observations_t, 1)
+# print search_steps
+# print execution_time
 #print "Observations: ", observations_t
 #print time.time() - start_time
