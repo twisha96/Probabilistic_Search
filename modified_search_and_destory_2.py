@@ -5,6 +5,7 @@ import time
 
 
 def get_new_cost(cell_map, destination_cell_cords, source_cell_cords, rule_no):
+    dim = len(cell_map)
     local_dist = abs(destination_cell_cords[0] - source_cell_cords[0]) + abs(destination_cell_cords[1] - source_cell_cords[1])
     local_cost = local_dist + 1
 
