@@ -19,6 +19,18 @@ def get_total_cost(cell_map, source_cell_cords, rule_no):
     return neighborhood_cost + cell.cost
 
 
+def get_min_second_step_cost(cell_map, source_cell_cords, rule_no):
+    cell = cell_map[source_cell_cords[0]][source_cell_cords[1]]
+    min_cost = sys.maxint
+    dim = len(cell_map)
+    for row in range(0, dim):
+        for col in range(0, dim):
+            curr_cost = get_cost(cell_map, (row, col), source_cell_cords, rule_no)
+            if curr_cost < min_cost:
+                min_cost = curr_cost
+    return min_cost + cell.cost
+
+
 def get_rule_1_cost(cell_map, destination_cell_cords):
     cell = cell_map[destination_cell_cords[0]][destination_cell_cords[1]]
     return 1 / cell.belief
@@ -84,8 +96,10 @@ def update_belief(cell_map, new_cell, rule_no, cost_function):
                 cell.utility = get_rule_1_cost(cell_map, (row, col))
             elif cost_function == 2:
                 cell.utility = get_rule_2_cost(cell_map, (row, col))
-            else:
+            elif cost_function == 3:
                 cell.utility = get_total_cost(cell_map, (row, col), rule_no)
+            elif cost_function == 4:
+                cell.utility = get_min_second_step_cost(cell_map, (row, col), rule_no)
 
             if cell.utility < min_cost:
                 min_cost = cell.utility
@@ -160,10 +174,10 @@ cell_map = cm.get_cell_map(dim, prob_list)
 (target_cord_x, target_cord_y, cell_type) = cm.add_target(cell_map)
 print "Target location:", target_cord_x, target_cord_y
 print "Target terrain type:", cell_map[target_cord_x][target_cord_y].type
-cm.visualize_board(cell_map)
+# cm.visualize_board(cell_map)
 
 start_time = time.time()
-search_steps, observations_t, execution_time = search_cell_map(cell_map, observations_t, 0, 3)
+search_steps, observations_t, execution_time = search_cell_map(cell_map, observations_t, 0, 4)
 print search_steps
 print execution_time
 #print "Observations: ", observations_t
